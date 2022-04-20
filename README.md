@@ -15,3 +15,12 @@ Some example found by the bot -
 - https://material-app.bootlab.io/dashboard/analytics
 - https://www.bootstrapdash.com/demo/victory-react/template/demo_1/preview/dashboard
 - http://nazox-v-dark.react.themesdesign.in/login
+
+Todo - 
+- [] Show incremental update on UI while fetching source map
+- [] Make deep linkable/sharable
+- [] Show result - Leak detected or Not Detected etc
+- [] Show how to fix
+- [] Integrate VS Code for better search/explore
+- [] Show list of npm packages used, maybe vulnerabilities also ?
+- [] Try to locate sensitive info, API Paths and other automated recon
