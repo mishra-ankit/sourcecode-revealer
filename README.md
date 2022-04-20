@@ -1,5 +1,5 @@
 As helpful as they are, it's easy to forget how much they're revealing about our code.
-
+Tiny tool to raise awareness about source maps as a potential attack surface.
 
 Some example found by the bot - 
 - https://app.synthesia.io/ - 16MB
