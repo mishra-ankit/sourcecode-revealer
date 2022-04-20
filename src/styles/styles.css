@@ -1,0 +1,64 @@
+/* a minimalist set of CSS resets */
+
+/* default to border-box */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* adjust typography defaults */
+body {
+/*   margin: 1rem; */
+  font-family: sans-serif;
+/*   line-height: 1.5; */
+}
+
+/* images and videos max out at full width */
+img,
+video {
+  height: auto;
+  max-width: 100%;
+}
+
+li {
+  margin-left: 10px;
+  opacity: 1;
+  height: auto;
+  list-style: none;
+  cursor: pointer;
+}
+
+li > span {
+  margin-right: 10px;
+}
+
+.hide-children > li {
+   overflow: hidden;  /* Hide the element content, while height = 0 */
+   height: 0;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: normal;
+  align-items: normal;
+  align-content: normal;
+  height: 70vh;
+}
+
+.flex-item:nth-child(1) {
+  display: block;
+  overflow: auto;
+}
+
+.flex-item:nth-child(2) {
+  display: block;
+  flex-grow: 1;
+}
