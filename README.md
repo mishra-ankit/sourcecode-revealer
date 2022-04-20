@@ -1,4 +1,5 @@
 As helpful as they are, it's easy to forget how much they're revealing about our code.
+
 Tiny tool to raise awareness about source maps as a potential attack surface.
 
 Some example found by the bot - 
@@ -17,10 +18,10 @@ Some example found by the bot -
 - http://nazox-v-dark.react.themesdesign.in/login
 
 Todo - 
-- [] Show incremental update on UI while fetching source map
-- [] Make deep linkable/sharable
-- [] Show result - Leak detected or Not Detected etc
-- [] Show how to fix
-- [] Integrate VS Code for better search/explore
-- [] Show list of npm packages used, maybe vulnerabilities also ?
-- [] Try to locate sensitive info, API Paths and other automated recon
+- [ ] Show incremental update on UI while fetching source map
+- [ ] Make deep linkable/sharable
+- [ ] Show result - Leak detected or Not Detected etc
+- [ ] Show how to fix
+- [ ] Integrate VS Code for better search/explore
+- [ ] Show list of npm packages used, maybe vulnerabilities also ?
+- [ ] Try to locate sensitive info, API Paths and other automated recon
