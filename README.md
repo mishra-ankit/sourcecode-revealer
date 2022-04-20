@@ -1,6 +1,6 @@
-As helpful as they are, it's easy to forget how much they're revealing about our code.
+[Source Map](https://www.html5rocks.com/en/tutorials/developertools/sourcemaps/) - as helpful as they are, it's easy to forget how much they're revealing about the code.
 
-Tiny tool to raise awareness about source maps as a potential attack surface.
+This is an attempt to raise awareness about source maps as a potential attack surface.
 
 Some example found by the bot - 
 - https://app.synthesia.io/ - 16MB
