@@ -1,5 +1,5 @@
 {
-  "name": "source-map-revealer",
+  "name": "sourcemap-revealer",
   "version": "0.0.1",
   "description": "An app to reveal source in the source maps",
   "scripts": {
@@ -27,8 +27,5 @@
   },
   "browserslist": [
     ">5%"
-  ],
-  "engines": {
-    "node": "14.x"
-  }
+  ]
 }
