@@ -105,7 +105,7 @@ export default function App() {
             name="url"
             required
             ref={inputURL}
-            placeholder="Enter application URL and we'll do the rest"
+            placeholder="Enter application URL and I'll do the rest"
             type="url"
           />
           <datalist id="url-suggestion">
