@@ -2,7 +2,7 @@ import { downloadZip } from 'client-zip';
 import fileSaver from 'file-saver';
 import { getSource } from './service';
 
-export const getSourceMaps = async (scriptList) => {
+export const getSourceMaps = async (scriptList, onUpdate) => {
   let error = '';
   const combinedSourceMap : {sources: string[], sourcesContent: string[]} = { sources: [], sourcesContent: [] };
   try {
@@ -17,6 +17,8 @@ export const getSourceMaps = async (scriptList) => {
       const resp = await getSource(url).catch((e) => {
         console.error('Failed for -', url);
       });
+      onUpdate(i);
+
       // add delay
       await new Promise((resolve) => setTimeout(resolve, 100));
       if (resp) {
@@ -33,7 +35,6 @@ export const getSourceMaps = async (scriptList) => {
     // Flatten all extra ../../ to show more content more meaningfully
     const regex = /^(\.\.\/)+/gm;
     combinedSourceMap.sources = combinedSourceMap.sources.map(path => path.replace(regex, ''));
-    
   } catch (e) {
     console.error(e.message);
     error = e.message;

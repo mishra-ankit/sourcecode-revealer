@@ -26,6 +26,7 @@ export default function App() {
   const [data, setData] = useState();
   const [error, setError] = useState('');
   const [totalSize, setTotalSize] = useState(0);
+  const [progress, setProgress] = useState('Loading ....');
 
   useEffect(() => {
     const cleandUpHash = hash.slice(1);
@@ -55,28 +56,39 @@ export default function App() {
     getList(url).then((list) => {
       const scriptList = list;
       setScriptList(scriptList);
-
-      getSourceMaps(scriptList).then(({ combinedSourceMap, error }) => {
-        if (error) {
-          setError(error);
-          return;
-        }
-        setData(combinedSourceMap);
-        const { sources } = combinedSourceMap;
-        const baap = {};
-        sources.map((path) => {
-          const parts = path.split('/');
-          let parent = baap;
-          parts.forEach((part) => {
-            parent[part] = parent[part] ? { ...parent[part] } : {};
-            parent = parent[part];
-          });
-        });
-        console.log({sources, baap, combinedSourceMap});
-        setContent(baap);
-      });
     });
   }, [url]);
+
+  useEffect(() => {
+    if (scriptList.length === 0) {
+      // setError("No source map found");
+      return;
+    }
+    
+    const handleUpdate = (currentIndex) => {
+      setTimeout(() => setProgress("Loading " + currentIndex + "/" + scriptList.length), 0);
+    };
+
+    getSourceMaps(scriptList, handleUpdate).then(({ combinedSourceMap, error }) => {
+      if (error) {
+        setError(error);
+        return;
+      }
+      setData(combinedSourceMap);
+      const { sources } = combinedSourceMap;
+      const baap = {};
+      sources.map((path) => {
+        const parts = path.split('/');
+        let parent = baap;
+        parts.forEach((part) => {
+          parent[part] = parent[part] ? { ...parent[part] } : {};
+          parent = parent[part];
+        });
+      });
+      console.log({sources, baap, combinedSourceMap});
+      setContent(baap);
+    });
+  }, [scriptList]);
 
   useEffect(() => {
     if (data) {
@@ -159,7 +171,7 @@ export default function App() {
         {error && <h4>{error}</h4>}
 
         {!error && url.length > 0 && !content && (
-          <Loader backdrop={true} size="lg" content="Loading..." />
+          <Loader backdrop={true} size="lg" content={progress} />
         )}
 
         {content && <FileExplorer content={content} data={data} />}
