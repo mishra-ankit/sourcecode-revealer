@@ -7,8 +7,6 @@ Some example found by the bot -
 - https://coreui.io/react/demo/4.0/dark/#/dashboard
 
 Todo - 
-- [ ] Add github link on Site
-- [ ] Flatten better, similar to Chrome, don't put things in .. etc, move them to top instead
 - [ ] Show incremental update on UI while fetching source map
 - [ ] Make deep linkable/sharable
 - [ ] Show result - Leak detected or Not Detected etc
