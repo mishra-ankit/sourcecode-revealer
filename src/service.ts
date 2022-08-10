@@ -27,7 +27,7 @@ async function getSourceMap(sourceUrl) {
 }
 
 async function getAllScripts(url) {
-  const content = await corsFetch(url).then((r) => r.text());
+  const content = await (await corsFetch(url).then((r) => r.text()));
   const scriptURLList = getScriptTagsURL(content);
   let chunkNames = [];
   const inlineScripts = getAllInlineScripts(content);

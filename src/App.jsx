@@ -8,6 +8,7 @@ import {
   Loader,
   Button,
 } from 'rsuite';
+import {useHash} from 'react-use';
 import prettyBytes from 'pretty-bytes';
 import Input from 'rsuite/Input';
 
@@ -17,6 +18,7 @@ import { getList } from './service';
 import { FileExplorer } from './FileExplorer/FileExplorer';
 
 export default function App() {
+  const [hash, setHash] = useHash();
   const [content, setContent] = useState();
   const inputURL = useRef(null);
   const [scriptList, setScriptList] = useState([]);
@@ -24,6 +26,14 @@ export default function App() {
   const [data, setData] = useState();
   const [error, setError] = useState('');
   const [totalSize, setTotalSize] = useState(0);
+
+  useEffect(() => {
+    const cleandUpHash = hash.slice(1);
+    inputURL.current.value = cleandUpHash;
+    if (cleandUpHash !== url) {
+      setUrl(cleandUpHash);
+    }
+  }, [hash]);
 
   const onSubmit = () => {
     reset();
@@ -37,6 +47,7 @@ export default function App() {
   };
 
   useEffect(() => {
+    setHash(url); // update hash
     reset();
 
     if (!url) return;
