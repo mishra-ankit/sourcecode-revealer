@@ -61,6 +61,7 @@ export default function App() {
             parent = parent[part];
           });
         });
+        console.log({sources, baap, combinedSourceMap});
         setContent(baap);
       });
     });

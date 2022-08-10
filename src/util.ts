@@ -4,7 +4,7 @@ import { getSource } from './service';
 
 export const getSourceMaps = async (scriptList) => {
   let error = '';
-  const combinedSourceMap = { sources: [], sourcesContent: [] };
+  const combinedSourceMap : {sources: string[], sourcesContent: string[]} = { sources: [], sourcesContent: [] };
   try {
     if (!scriptList.length) {
       throw new Error('No scripts found on page');
@@ -29,6 +29,11 @@ export const getSourceMaps = async (scriptList) => {
       combinedSourceMap.sourcesContent =
         combinedSourceMap.sourcesContent.concat(d.sourcesContent);
     });
+
+    // Flatten all extra ../../ to show more content more meaningfully
+    const regex = /^(\.\.\/)+/gm;
+    combinedSourceMap.sources = combinedSourceMap.sources.map(path => path.replace(regex, ''));
+    
   } catch (e) {
     console.error(e.message);
     error = e.message;
