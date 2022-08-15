@@ -7,8 +7,8 @@ Some example found by the bot -
 - https://coreui.io/react/demo/4.0/dark/#/dashboard
 
 Todo - 
-- [ ] Show incremental update on UI while fetching source map
-- [ ] Make deep linkable/sharable
+- [x] Show incremental update on UI while fetching source map
+- [x] Make deep linkable/sharable
 - [ ] Show result - Leak detected or Not Detected etc
 - [ ] Show how to fix
 - [ ] Integrate VS Code for better search/explore
