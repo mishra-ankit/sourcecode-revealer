@@ -1,5 +1,6 @@
 import { downloadZip } from 'client-zip';
 import fileSaver from 'file-saver';
+import normalize from 'normalize-path'
 import { getSource } from './service';
 
 export const getSourceMaps = async (scriptList, onUpdate) => {
@@ -34,7 +35,7 @@ export const getSourceMaps = async (scriptList, onUpdate) => {
 
     // Flatten all extra ../../ to show more content more meaningfully
     const regex = /^(\.\.\/)+/gm;
-    combinedSourceMap.sources = combinedSourceMap.sources.map(path => path.replace(regex, ''));
+    combinedSourceMap.sources = combinedSourceMap.sources.map(path => normalize(path).replace(regex, '').replace('/./', '/'));
   } catch (e) {
     console.error(e.message);
     error = e.message;
