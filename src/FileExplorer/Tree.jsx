@@ -9,7 +9,6 @@ export function Tree({ content, parentPath = "", onSelect = () => {} }) {
   const handleClick = (e, x, key, path) => {
     const target = e.target; // li.current[x].
     e.stopPropagation();
-    const name = key;
 
     const directoryContent = content[key];
     // TODO: Bad logic, what about empty folder ?
@@ -56,7 +55,7 @@ const translateMap = {
     'tsx' : 'ts'
 }
 
-function getFileIconLabel(fileName, isDirectory = false) {
+function getFileIconLabel(fileName) {
   // File extension of interest are: html, htm, js, css, json, gif, jpg, jpeg, png, ico, md, txt
   // You can add more as you see fit
   fileName = fileName.toLowerCase();

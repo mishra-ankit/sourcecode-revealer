@@ -56,6 +56,8 @@ li > span {
 .flex-item:nth-child(1) {
   display: block;
   overflow: auto;
+  background: #e6e6e6;
+  padding: 5px;
 }
 
 .flex-item:nth-child(2) {

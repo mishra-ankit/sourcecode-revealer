@@ -16,6 +16,7 @@ import { downloadCode, getSourceMaps, packFiles } from './util';
 
 import { getList } from './service';
 import { FileExplorer } from './FileExplorer/FileExplorer';
+import FileDownload from '@rsuite/icons/FileDownload';
 
 export default function App() {
   const [hash, setHash] = useHash();
@@ -66,7 +67,7 @@ export default function App() {
     }
     
     const handleUpdate = (currentIndex) => {
-      setTimeout(() => setProgress("Loading " + currentIndex + "/" + scriptList.length), 0);
+      setTimeout(() => setProgress("Loading " + (currentIndex + 1) + "/" + scriptList.length), 0);
     };
 
     getSourceMaps(scriptList, handleUpdate).then(({ combinedSourceMap, error }) => {
@@ -158,13 +159,15 @@ export default function App() {
                 placeholder="Or enter scripts URLs here (one per line)"
               />
             </InputGroup>
-            <Button
+            {totalSize > 0 && <Button appearance="primary"
+              ripple={true}
               onClick={() =>
                 downloadCode(data.sources, data.sourcesContent, url)
               }
             >
               Download Code ({prettyBytes(totalSize)})
-            </Button>
+              <FileDownload />
+            </Button>}
           </>
         )}
 
