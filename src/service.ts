@@ -1,4 +1,4 @@
-const CORS_PROXY = 'https://ncert.centralindia.cloudapp.azure.com:8080';
+const CORS_PROXY = 'https://cors-baba.fly.dev';
 
 const corsFetch = (url, ...rest) => fetch(`${CORS_PROXY}/${url}`, ...rest);
 
