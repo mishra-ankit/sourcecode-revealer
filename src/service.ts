@@ -21,7 +21,7 @@ async function getList(reqUrl) {
 }
 
 async function getSourceMap(sourceUrl) {
-  const mapUrl = sourceUrl + '.map';
+  const mapUrl = sourceUrl.replace(".js", ".js.map");
   const mapRawContent = await corsFetch(mapUrl).then((r) => r.json());
   return mapRawContent;
 }

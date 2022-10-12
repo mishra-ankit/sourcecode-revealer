@@ -14,3 +14,5 @@ Todo -
 - [ ] Integrate VS Code for better search/explore
 - [ ] Show list of npm packages used, maybe vulnerabilities also ?
 - [ ] Try to locate sensitive info, API Paths and other automated recon
+- [ ] Fetch license.txt also and try to parse it for libs used
+- [ ] Authored code vs lib code (same as google dev tools)
