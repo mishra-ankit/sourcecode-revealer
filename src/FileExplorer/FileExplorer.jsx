@@ -12,7 +12,7 @@ export function FileExplorer({ content, data }) {
     const handleFileSelect = (key) => {
       const i = data.sources.findIndex((i) => i === key);
       const code = data.sourcesContent[i];
-      editorRef.current.setValue(code);
+      editorRef.current.setValue(code ?? "//No Content Found");
       editorRef.current.setScrollPosition({ scrollTop: 0 });
     };
   
