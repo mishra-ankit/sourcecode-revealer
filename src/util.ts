@@ -35,7 +35,7 @@ export const getSourceMaps = async (scriptList, onUpdate) => {
 
     // Flatten all extra ../../ to show more content more meaningfully
     const regex = /^(\.\.\/)+/gm;
-    combinedSourceMap.sources = combinedSourceMap.sources.map(path => normalize(path).replace(regex, '').replace('/./', '/'));
+    combinedSourceMap.sources = combinedSourceMap.sources.map(path => path && normalize(path).replace(regex, '').replace('/./', '/')).filter(i => !!i);
   } catch (e) {
     console.error(e.message);
     error = e.message;
