@@ -1,7 +1,8 @@
-// const CORS_PROXY = 'https://cors-baba.fly.dev/';
-const CORS_PROXY = process.env.REACT_APP_CORS_PROXY ?? "https://api.allorigins.win/raw?url="
+// const CORS_PROXY = 'https://cors-baba.fly.dev/'; // 'https://corsproxy.io/?' // "https://api.allorigins.win/raw?url="
+const CORS_PROXY = process.env.REACT_APP_CORS_PROXY ?? "https://corsproxy.io/?"
 
-const corsFetch = (url, ...rest) => fetch(`${CORS_PROXY}${url}`, ...rest);
+const getURLWithProxy = (url) => CORS_PROXY + encodeURIComponent(url);
+const corsFetch = (url, ...rest) => fetch(getURLWithProxy(url), ...rest);
 
 async function getSource(url) {
   try {
