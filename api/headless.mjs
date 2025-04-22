@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
-import fetch from "node-fetch"; // Import node-fetch for HTTP requests
+import fetch from "node-fetch";
+import chromium from "@sparticuz/chromium"; // Import @sparticuz/chromium for bundled Chromium
 
 export async function GET(request) {
   let browser;
@@ -11,7 +12,9 @@ export async function GET(request) {
 
     browser = await puppeteer.launch({
       headless: true,
+      executablePath: await chromium.executablePath(), // Use bundled Chromium
       args: [
+        ...chromium.args, // Use Chromium-specific arguments
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-blink-features=AutomationControlled",
