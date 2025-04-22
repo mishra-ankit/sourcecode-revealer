@@ -2,10 +2,6 @@
 
 This is an attempt to raise awareness about source maps as a potential attack surface.
 
-Some example found by the bot - 
-- https://app.synthesia.io/ - 16MB
-- https://coreui.io/react/demo/4.0/dark/#/dashboard
-
 Todo - 
 - [x] Show incremental update on UI while fetching source map
 - [x] Make deep linkable/sharable
