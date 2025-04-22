@@ -1,6 +1,6 @@
-const CORS_PROXY: string = import.meta.env.REACT_APP_CORS_PROXY ?? "https://cors-baba.fly.dev/";
+const CORS_PROXY: string = "/api/cors-proxy?url=";
 
-const getURLWithProxy = (url: string): string => CORS_PROXY + url;
+const getURLWithProxy = (url: string): string => CORS_PROXY + encodeURIComponent(url);
 const corsFetch = (url: string, ...rest: [RequestInit?]): Promise<Response> => fetch(getURLWithProxy(url), ...rest);
 
 async function getSource(url: string): Promise<Record<string, unknown>> {
