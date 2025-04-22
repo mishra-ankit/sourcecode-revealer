@@ -5,7 +5,7 @@ export async function GET(request) {
   try {
     const url = new URL(request.url).searchParams.get("url");
     if (!url) {
-      return new Response(JSON.stringify({ error: "URL is required" }), { status: 400 });
+      return createJsonResponse({ error: "URL is required" }, 400);
     }
 
     browser = await puppeteer.launch({
@@ -20,22 +20,36 @@ export async function GET(request) {
     const page = await browser.newPage();
     const requests = [];
 
+    // Block unnecessary resources to improve performance
+    await page.setRequestInterception(true);
     page.on("request", (req) => {
-      requests.push({
-        url: req.url(),
-        method: req.method(),
-        headers: req.headers(),
-      });
+      if (["image", "stylesheet", "font"].includes(req.resourceType())) {
+        req.abort();
+      } else {
+        requests.push({
+          url: req.url(),
+          method: req.method(),
+          headers: req.headers(),
+        });
+        req.continue();
+      }
     });
 
-    await page.goto(url);
+    await page.goto(url, { waitUntil: "domcontentloaded" });
 
-    return new Response(JSON.stringify({ requests }), { status: 200 });
+    return createJsonResponse({ requests });
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Failed to process the request." + error }), { status: 500 });
+    return createJsonResponse({ error: "Failed to process the request." + error }, 500);
   } finally {
     if (browser) {
       await browser.close();
     }
   }
+}
+
+function createJsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
 }
