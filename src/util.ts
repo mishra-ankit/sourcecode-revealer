@@ -5,7 +5,7 @@ import { getSource } from './service';
 
 export const getSourceMaps = async (scriptList: string[], onUpdate: { (currentIndex: number): void; (arg0: number): void; }) => {
   let error = '';
-  const combinedSourceMap : {sources: string[], sourcesContent: string[]} = { sources: [], sourcesContent: [] };
+  const combinedSourceMap: { sources: string[], sourcesContent: string[] } = { sources: [], sourcesContent: [] };
   try {
     if (!scriptList.length) {
       throw new Error('No scripts found on page');
@@ -18,13 +18,11 @@ export const getSourceMaps = async (scriptList: string[], onUpdate: { (currentIn
       const resp = await getSource(url).catch((e) => {
         console.error('Failed for -', url);
         if (e instanceof Error) {
-          if (e instanceof Error) {
-            console.error(e.message);
-          } else {
-            console.error('An unknown error occurred:', e);
-          }
+          console.error(e.message);
+          error = e.message;
         } else {
           console.error('An unknown error occurred:', e);
+          error = 'An unknown error occurred';
         }
       });
       onUpdate(i);
@@ -47,13 +45,8 @@ export const getSourceMaps = async (scriptList: string[], onUpdate: { (currentIn
     combinedSourceMap.sources = combinedSourceMap.sources.map(path => path && normalize(path).replace(regex, '').replace('/./', '/')).filter(i => !!i);
   } catch (e) {
     if (e instanceof Error) {
-      if (e instanceof Error) {
-        console.error(e.message);
-        error = e.message;
-      } else {
-        console.error('An unknown error occurred:', e);
-        error = 'An unknown error occurred';
-      }
+      console.error(e.message);
+      error = e.message;
     } else {
       console.error('An unknown error occurred:', e);
       error = 'An unknown error occurred';
@@ -66,8 +59,8 @@ export const getSourceMaps = async (scriptList: string[], onUpdate: { (currentIn
     error: error.length
       ? error
       : combinedSourceMap.sources.length === 0
-      ? 'No map files found'
-      : '',
+        ? 'No map files found'
+        : '',
   };
 };
 
@@ -90,13 +83,13 @@ export async function packFiles(filePaths: unknown[], fileContents: string[]) {
   const files = [intro];
 
   (filePaths as { replaceAll: (arg0: string, arg1: string) => string }[]).forEach((path, index) => {
-      const sanitizedPath = path.replaceAll('..', 'other');
-      files.push({
-        name: sanitizedPath,
-        lastModified: new Date(),
-        input: fileContents[index] || '',
-      });
+    const sanitizedPath = path.replaceAll('..', 'other');
+    files.push({
+      name: sanitizedPath,
+      lastModified: new Date(),
+      input: fileContents[index] || '',
     });
+  });
   let blob;
   // get the ZIP stream in a Blob
   try {
