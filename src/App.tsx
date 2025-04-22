@@ -73,8 +73,8 @@ export default function App() {
     };
 
     getSourceMaps(scriptList, handleUpdate).then(({ combinedSourceMap, error }) => {
-      if (error) {
-        setError(error);
+      if (combinedSourceMap.sources.length === 0) {
+        setError(error || 'No map files found');
         return;
       }
       setData(combinedSourceMap);
