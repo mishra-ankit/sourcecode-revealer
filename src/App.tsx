@@ -115,7 +115,7 @@ export default function App() {
             }}
           >
             <h4 className="navbar-brand logo">
-              Is your source code revealing too much ?
+              Is your sourcemap revealing too much ?
             </h4>
           </Navbar.Header>
         </Navbar>
