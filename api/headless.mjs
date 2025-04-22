@@ -58,7 +58,7 @@ export async function GET(request) {
       }
     });
 
-    await page.goto(url, { waitUntil: "networkidle2" });
+    await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 }); // Add timeout for better performance
     const htmlContent = await page.content();
 
     return createJsonResponse({
@@ -72,7 +72,7 @@ export async function GET(request) {
     return createJsonResponse({ error: "Failed to process the request." + error }, 500);
   } finally {
     if (browser) {
-      await browser.close();
+      browser.close(); // Make this call asynchronous without waiting
     }
   }
 }
