@@ -3,7 +3,7 @@ import fileSaver from 'file-saver';
 import normalize from 'normalize-path'
 import { getSource } from './service';
 
-export const getSourceMaps = async (scriptList, onUpdate) => {
+export const getSourceMaps = async (scriptList: string[], onUpdate: { (currentIndex: number): void; (arg0: number): void; }) => {
   let error = '';
   const combinedSourceMap : {sources: string[], sourcesContent: string[]} = { sources: [], sourcesContent: [] };
   try {
@@ -17,6 +17,15 @@ export const getSourceMaps = async (scriptList, onUpdate) => {
       const url = scriptList[i];
       const resp = await getSource(url).catch((e) => {
         console.error('Failed for -', url);
+        if (e instanceof Error) {
+          if (e instanceof Error) {
+            console.error(e.message);
+          } else {
+            console.error('An unknown error occurred:', e);
+          }
+        } else {
+          console.error('An unknown error occurred:', e);
+        }
       });
       onUpdate(i);
 
@@ -28,17 +37,27 @@ export const getSourceMaps = async (scriptList, onUpdate) => {
     }
 
     reutrnedSources.forEach((d) => {
-      combinedSourceMap.sources = combinedSourceMap.sources.concat(d.sources);
+      combinedSourceMap.sources = combinedSourceMap.sources.concat(d.sources as string[]);
       combinedSourceMap.sourcesContent =
-        combinedSourceMap.sourcesContent.concat(d.sourcesContent);
+        combinedSourceMap.sourcesContent.concat(d.sourcesContent as string[]);
     });
 
     // Flatten all extra ../../ to show more content more meaningfully
     const regex = /^(\.\.\/)+/gm;
     combinedSourceMap.sources = combinedSourceMap.sources.map(path => path && normalize(path).replace(regex, '').replace('/./', '/')).filter(i => !!i);
   } catch (e) {
-    console.error(e.message);
-    error = e.message;
+    if (e instanceof Error) {
+      if (e instanceof Error) {
+        console.error(e.message);
+        error = e.message;
+      } else {
+        console.error('An unknown error occurred:', e);
+        error = 'An unknown error occurred';
+      }
+    } else {
+      console.error('An unknown error occurred:', e);
+      error = 'An unknown error occurred';
+    }
   }
 
   return {
@@ -52,13 +71,17 @@ export const getSourceMaps = async (scriptList, onUpdate) => {
   };
 };
 
-export async function downloadCode(filePaths, fileContents, url) {
+export async function downloadCode(filePaths: string[], fileContents: string[], url: string | URL) {
   const blob = await packFiles(filePaths, fileContents);
   const zipName = new URL(url).hostname;
-  fileSaver.saveAs(blob, `${zipName}-code.zip`);
+  if (blob) {
+    fileSaver.saveAs(blob, `${zipName}-code.zip`);
+  } else {
+    console.error('Blob is undefined, cannot save file.');
+  }
 }
 
-export async function packFiles(filePaths, fileContents) {
+export async function packFiles(filePaths: unknown[], fileContents: string[]) {
   const intro = {
     name: 'BANNER.txt',
     lastModified: new Date(),
@@ -66,15 +89,14 @@ export async function packFiles(filePaths, fileContents) {
   };
   const files = [intro];
 
-  filePaths.forEach((path, index) => {
-    const sanitizedPath = path.replaceAll('..', 'other');
-    files.push({
-      name: sanitizedPath,
-      lastModified: new Date(),
-      input: fileContents[index] || '',
+  (filePaths as { replaceAll: (arg0: string, arg1: string) => string }[]).forEach((path, index) => {
+      const sanitizedPath = path.replaceAll('..', 'other');
+      files.push({
+        name: sanitizedPath,
+        lastModified: new Date(),
+        input: fileContents[index] || '',
+      });
     });
-    // }
-  });
   let blob;
   // get the ZIP stream in a Blob
   try {

@@ -1,20 +1,19 @@
-// const CORS_PROXY = 'https://cors-baba.fly.dev/'; // 'https://corsproxy.io/?' // "https://api.allorigins.win/raw?url="
-const CORS_PROXY = process.env.REACT_APP_CORS_PROXY ?? "https://corsproxy.io/?"
+const CORS_PROXY: string = import.meta.env.REACT_APP_CORS_PROXY ?? "https://cors-baba.fly.dev/";
 
-const getURLWithProxy = (url) => CORS_PROXY + encodeURIComponent(url);
-const corsFetch = (url, ...rest) => fetch(getURLWithProxy(url), ...rest);
+const getURLWithProxy = (url: string): string => CORS_PROXY + url;
+const corsFetch = (url: string, ...rest: [RequestInit?]): Promise<Response> => fetch(getURLWithProxy(url), ...rest);
 
-async function getSource(url) {
+async function getSource(url: string): Promise<Record<string, unknown>> {
   try {
     const d = await getSourceMap(url);
     return d;
-  } catch (error) {
+  } catch {
     throw new Error('Map file not found');
   }
 }
 
-async function getList(reqUrl) {
-  return (await getAllScripts(reqUrl)).map((url) => {
+async function getList(reqUrl: string): Promise<string[]> {
+  return (await getAllScripts(reqUrl)).map((url: string) => {
     const isAbsoluteURL =
       url.startsWith('https://') || url.startsWith('http://');
     const { origin } = new URL(reqUrl);
@@ -22,16 +21,16 @@ async function getList(reqUrl) {
   });
 }
 
-async function getSourceMap(sourceUrl) {
+async function getSourceMap(sourceUrl: string): Promise<Record<string, unknown>> {
   const mapUrl = sourceUrl.replace(".js", ".js.map");
   const mapRawContent = await corsFetch(mapUrl).then((r) => r.json());
   return mapRawContent;
 }
 
-async function getAllScripts(url) {
+async function getAllScripts(url: string): Promise<string[]> {
   const content = await (await corsFetch(url).then((r) => r.text()));
   const scriptURLList = getScriptTagsURL(content);
-  let chunkNames = [];
+  let chunkNames: string[] = [];
   const inlineScripts = getAllInlineScripts(content);
   // iterate on inlineScripts
   for (let i = 0; i < inlineScripts.length; i++) {
@@ -43,8 +42,8 @@ async function getAllScripts(url) {
   return [...scriptURLList, ...chunkNames];
 }
 
-async function getChunkList(text) {
-  const result = [];
+async function getChunkList(text: string): Promise<string[]> {
+  const result: string[] = [];
   // split at ".chunk.css"
   // first part will have CSS chunks
   // second part will have JS chunks
@@ -61,14 +60,14 @@ async function getChunkList(text) {
   return [...jsChunks];
 }
 
-function getChunkNames(text, prefix, postfix) {
-  const regex = /(\d?\d):"(.*?)"/gm;
-  const result = [];
+function getChunkNames(text: string, prefix: string, postfix: string): string[] {
+  const regex = /\(\d?\d\):"(.*?)"/gm;
+  const result: string[] = [];
   const matches = text.matchAll(regex);
 
-  const list = [];
+  const list: string[][] = [];
   for (const match of matches) {
-    const index = match[1];
+    const index = parseInt(match[1]);
     if (list[index]) {
       list[index].push(match[2]);
     } else {
@@ -92,13 +91,13 @@ function getChunkNames(text, prefix, postfix) {
   return result;
 }
 
-function getScriptTagsURL(content) {
+function getScriptTagsURL(content: string): string[] {
   const scripts = getScriptTags(content);
   const ownOrigin = location.origin;
   return scripts.map((i) => i.src.replace(ownOrigin, '')).filter((i) => i);
 }
 
-function getScriptTags(content) {
+function getScriptTags(content: string): HTMLScriptElement[] {
   const dom = htmlToElement(`<div>${content}</div>`);
   const scripts = Array.from(
     dom.getElementsByTagName('script')
@@ -106,17 +105,17 @@ function getScriptTags(content) {
   return scripts;
 }
 
-function getAllInlineScripts(content) {
+function getAllInlineScripts(content: string): string[] {
   return getScriptTags(content)
     .filter((i) => i.src === '')
     .map((i) => i.innerHTML);
 }
 
-function htmlToElement(html) {
+function htmlToElement(html: string): HTMLElement {
   const template = document.createElement('template');
   html = html.trim();
   template.innerHTML = html;
-  return template.content.firstChild;
+  return template.content.firstChild as HTMLElement;
 }
 
 export { getSource, getList };

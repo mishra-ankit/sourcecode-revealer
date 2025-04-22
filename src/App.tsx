@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Container,
   Header,
@@ -11,35 +11,37 @@ import {
 import {useHash} from 'react-use';
 import prettyBytes from 'pretty-bytes';
 import Input from 'rsuite/Input';
-
-import { downloadCode, getSourceMaps, packFiles } from './util';
-
-import { getList } from './service';
 import { FileExplorer } from './FileExplorer/FileExplorer';
 import FileDownload from '@rsuite/icons/FileDownload';
+import { getList } from './service';
+import { downloadCode, getSourceMaps, packFiles } from './util';
+import 'rsuite/dist/rsuite.min.css';
+import './App.css';
 
 export default function App() {
   const [hash, setHash] = useHash();
-  const [content, setContent] = useState();
-  const inputURL = useRef(null);
-  const [scriptList, setScriptList] = useState([]);
+  const [content, setContent] = useState<Record<string, unknown> | undefined>();
+  const inputURL = useRef<HTMLInputElement>(null);
+  const [scriptList, setScriptList] = useState<string[]>([]);
   const [url, setUrl] = useState('');
-  const [data, setData] = useState();
+  const [data, setData] = useState<{ sources: string[]; sourcesContent: string[] } | undefined>();
   const [error, setError] = useState('');
   const [totalSize, setTotalSize] = useState(0);
   const [progress, setProgress] = useState('Loading ....');
 
   useEffect(() => {
     const cleandUpHash = hash.slice(1);
-    inputURL.current.value = cleandUpHash;
+    if (inputURL.current) {
+      inputURL.current.value = cleandUpHash;
+    }
     if (cleandUpHash !== url) {
       setUrl(cleandUpHash);
     }
-  }, [hash]);
+  }, [hash, url]);
 
   const onSubmit = () => {
     reset();
-    const value = inputURL.current.value;
+    const value = inputURL.current?.value || '';
     // if the url doesn't start with https or http, add https://
     if (!value.startsWith('https://') && !value.startsWith('http://')) {
       setUrl(`https://${value}`);
@@ -66,7 +68,7 @@ export default function App() {
       return;
     }
     
-    const handleUpdate = (currentIndex) => {
+    const handleUpdate = (currentIndex: number) => {
       setTimeout(() => setProgress("Loading " + (currentIndex + 1) + "/" + scriptList.length), 0);
     };
 
@@ -77,16 +79,18 @@ export default function App() {
       }
       setData(combinedSourceMap);
       const { sources } = combinedSourceMap;
-      const baap = {};
-      sources.map((path) => {
+      const baap: Record<string, unknown> = {};
+      sources.forEach((path) => {
         const parts = path.split('/');
-        let parent = baap;
+        let parent: Record<string, unknown> = baap;
         parts.forEach((part) => {
-          parent[part] = parent[part] ? { ...parent[part] } : {};
-          parent = parent[part];
+          if (!parent[part]) {
+        parent[part] = {};
+          }
+          parent = parent[part] as Record<string, unknown>;
         });
       });
-      console.log({sources, baap, combinedSourceMap});
+      console.log({ sources, baap, combinedSourceMap });
       setContent(baap);
     });
   }, [scriptList]);
@@ -94,7 +98,9 @@ export default function App() {
   useEffect(() => {
     if (data) {
       packFiles(data.sources, data.sourcesContent).then((blob) => {
-        setTotalSize(blob.size);
+        if (blob) {
+          setTotalSize(blob.size);
+        }
       });
     }
   }, [data]);
@@ -161,9 +167,11 @@ export default function App() {
             </InputGroup>
             {totalSize > 0 && <Button appearance="primary"
               ripple={true}
-              onClick={() =>
-                downloadCode(data.sources, data.sourcesContent, url)
-              }
+              onClick={() => {
+                if (data) {
+                  downloadCode(data.sources, data.sourcesContent, url);
+                }
+              }}
             >
               Download Code ({prettyBytes(totalSize)})
               <FileDownload />
@@ -177,16 +185,16 @@ export default function App() {
           <Loader backdrop={true} size="lg" content={progress} />
         )}
 
-        {content && <FileExplorer content={content} data={data} />}
+        {content && data && <FileExplorer content={content} data={data} />}
       </Content>
     </Container>
   );
 
   function reset() {
-    setData();
+    setData(undefined);
     setScriptList([]);
     setError('');
-    setContent();
+    setContent(undefined);
     setTotalSize(0);
   }
 }
