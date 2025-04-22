@@ -1,4 +1,4 @@
-export async function GET(request: Request) {
+export async function GET(request) {
   const url = new URL(request.url);
   const name = url.searchParams.get('name') || 'World';
  
