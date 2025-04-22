@@ -2,7 +2,8 @@ import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
 import PuppeteerHar from 'puppeteer-har';
 
-export default async function handler(req, res) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function handler(req: any, res: any) {
   const { url } = req.query;
   if (!url) return res.status(400).json({ error: 'Missing URL' });
 
